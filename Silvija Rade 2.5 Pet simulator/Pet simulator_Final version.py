@@ -3,54 +3,55 @@ import sys
 import Engine
 import time
 import random
+#importanje dodatnih sadržaja u python
 
 pygame.init ()
-begtime=time.time()
+begtime=time.time() #vrijeme u kojemu je program pokrenut
 
-width = 1280
-height = 941
-fxf=200
-fxe=200
-fxh=200
+width = 1280 #širina ekrana
+height = 941 #visina ekrana
+fxf=200 #početna širina hrane (food)
+fxe=200 #početna širina energije (energy)
+fxh=200 #početna širina sreće (happy)
 
 
-def bedroom():
+def bedroom(): #funkcija koja pokreće sobu
     background=pygame.image.load("bedroom.jpg").convert()
     screen.blit(background, (0,0))
     screen.blit(noxon,(-100,100))
-    screen.blit(left,(20,height/2-300))
-    screen.blit(right,(width-160,height/2-300))
-    screen.blit(zzz,(900,600))
+    screen.blit(left,(20,height/2-300)) #lijeva strelica
+    screen.blit(right,(width-160,height/2-300)) #desna strelica
+    screen.blit(zzz,(900,600)) #ikona za spavanje
 
-def kitchen():
+def kitchen(): #funkcija koja pokreće kuhinju
     background=pygame.image.load("kitchen.jpg").convert()
     screen.blit(background, (0,0))
     screen.blit(noxon,(-100,100))
-    screen.blit(watermelon,(900,600))
-    screen.blit(left,(20,height/2-300))
-    screen.blit(right,(width-160,height/2-300))
+    screen.blit(watermelon,(900,600)) #ikona za hranjene
+    screen.blit(left,(20,height/2-300))  #lijeva strelica
+    screen.blit(right,(width-160,height/2-300)) #desna strelica
     
-def living():
+def living(): #funkcija koja pokreće dnevni boravak
     background=pygame.image.load("livingroom.jpg").convert()
     screen.blit(background, (0,0))
     screen.blit(noxon,(-100,100))
-    screen.blit(ball,(900,600))
-    screen.blit(left,(20,height/2-300))
-    screen.blit(right,(width-160,height/2-300))
+    screen.blit(ball,(900,600)) #ikona za igranje
+    screen.blit(left,(20,height/2-300)) #lijeva strelica
+    screen.blit(right,(width-160,height/2-300)) #desna strelica
         
     
 
-def food(fx):
+def food(fx): #crtanje health bar but food
     text_size=20
     textp= "Food"
     text_color= [0, 0, 0]
-    i=width-300
+    i=width-300 #pozicija teksta 
     j=100
     text(text_size,text_color, textp, i, j )
-    pygame.draw.rect(screen, (255, 255, 255), (width-260, 65, 220, 70 ))
-    pygame.draw.rect(screen, (250-fx, fx, 0), (width-250, 75, fx, 50))
+    pygame.draw.rect(screen, (255, 255, 255), (width-260, 65, 220, 70 )) #vanjski pravokutnik
+    pygame.draw.rect(screen, (250-fx, fx, 0), (width-250, 75, fx, 50)) #unutrašnji pravokutnik
 
-def energy(fx):
+def energy(fx): #crtanje health bar but energy
     text_size=20
     textp= "Energy"
     text_color= [0, 0, 0]
@@ -60,7 +61,7 @@ def energy(fx):
     pygame.draw.rect(screen, (255, 255, 255), (width-560, 65, 220, 70 ))
     pygame.draw.rect(screen, (250-fx, fx, 0), (width-550, 75, fx, 50))
 
-def happiness(fx):
+def happiness(fx): #crtanje health bar but happiness
     text_size=20
     textp= "Happy"
     text_color= [0, 0, 0]
@@ -71,19 +72,20 @@ def happiness(fx):
     pygame.draw.rect(screen, (250-fx, fx, 0), (width-850, 75, fx, 50))
     
 
-def eating():
+def eating(): #učitava emociju hranjenja
     global fxf
     global e
     global etime
-    screen.blit(eat,(-100,100))
-    etime=time.time()
-    e=True
-    fxf+=10
-    if fxf>200:
+    screen.blit(eat,(-100,100)) 
+    etime=time.time() #trenutak u kojem se počela prikazivati emocija
+    e=True #oznaka da je emocija upaljena
+    fxf+=10 #povećava duljinu health bar-a
+    if fxf>200: #provjerava ako je health na maksimumu
         fxf=200
+    music() #učitavanje nom nom nom zvuk
     
 
-def sleeping ():
+def sleeping (): #učitava emociju spavanja
     global fxe
     global s
     global stime
@@ -94,7 +96,7 @@ def sleeping ():
     if fxe>200:
         fxe=200
 
-def happy():
+def happy(): #učitava emociju sreće
     global fxh
     global h
     global htime
@@ -105,30 +107,30 @@ def happy():
     if fxh>200:
         fxh=200
     
-def text(text_size, text_color, textp, i, j ):
+def text(text_size, text_color, textp, i, j ): #pojedinosti za tekst
     font = pygame.font.Font('freesansbold.ttf', text_size)
     text=font.render(textp, True, text_color)
     textRect = text.get_rect()
     textRect.center = [i, j]
     screen.blit(text, textRect)
 
-def promjenap(z):
+def promjenap(z): #kroz listu prati u koju prostoriju treba otići i preusmjerava u određenu funkciju
     global p
     global prostorije
     p=p+z
-    if p<0:
+    if p<0: #provjerava ako si došao do kraja liste
         p=len(prostorije)-1
     if p>=len(prostorije):
         p=0
     prostorije[p]()
 
-def promjena_plus():
+def promjena_plus(): #ide li desno
     promjenap(1)
 
-def promjena_minus():
+def promjena_minus(): #ili lijevo
     promjenap(-1)
 
-def preusmjeravanje ():
+def preusmjeravanje (): #preusmjerava u funkciju koju emociju treba upotrijebiti
     if p==0:
         Engine.button(event, 140, 140, 900 , 600, width, height, sleeping)
     if p==1:
@@ -137,7 +139,7 @@ def preusmjeravanje ():
         Engine.button(event, 140, 140, 900 , 600, width, height, happy)
 
 
-def noxonp():
+def noxonp(): #učitava slike za "pokemona" Noxon
     global noxon
     global eat
     global happys
@@ -146,7 +148,7 @@ def noxonp():
     global angry
     global noxon2
     global screen
-    screen = pygame.display.set_mode((width,height))
+    screen = pygame.display.set_mode((width,height)) #učitava ekran
     noxon=pygame.image.load("noxon.png").convert_alpha()
     eat=pygame.image.load("eating.png").convert_alpha()
     happys=pygame.image.load("happy.png").convert_alpha()
@@ -156,7 +158,7 @@ def noxonp():
     noxon2  =pygame.image.load("noxon.png").convert_alpha()
 
 
-def monp():
+def monp(): #učitava slike za "pokemona" Mon
     global noxon
     global eat
     global happys
@@ -165,7 +167,7 @@ def monp():
     global angry
     global noxon2
     global screen
-    screen = pygame.display.set_mode((width,height))
+    screen = pygame.display.set_mode((width,height)) 
     noxon=pygame.image.load("mon_original.png").convert_alpha()   
     eat=pygame.image.load("mon_eating.png").convert_alpha()
     happys=pygame.image.load("mon_happy.png").convert_alpha()   
@@ -174,7 +176,7 @@ def monp():
     angry=pygame.image.load("mon_angry.png").convert_alpha()
     noxon2  =pygame.image.load("mon_original.png").convert_alpha()
         
-def randomn():
+def randomn(): #funkcija za random imena generator
     global name_list
     numb=random.randrange(0,len(name_list))
     nome=name_list[numb]
@@ -187,7 +189,7 @@ def randomn():
         print("Let's try another one!")
         randomn()
 
-def provjeri():
+def provjeri(): #provjerava jesi li odabrao jednog od postojećih "pokemona"
     global pokemon
     print("Choose: Noxon or Mon")
     pokemon=input()
@@ -198,18 +200,22 @@ def provjeri():
     else:
         print("I'm sorry, I don't understand. Try again")
         provjeri()
+        
+def music(): #nom non nom funkcija
+    pygame.mixer.music.load('Nom.mp3')
+    pygame.mixer.music.play()
     
 
-pokemon="Nothing"
+pokemon="Nothing" #tek toliko
 
-provjeri()
+provjeri() #zvanje funkcije
               
-name_list=['Bob', 'Koko', 'Slavko', 'Gary']
+name_list=['Bob', 'Koko', 'Slavko', 'Gary', 'Nom', 'Ted', 'Cookie', 'Burrito', 'Chonky', 'Fluffy', 'Burek', 'Mozart','Pickle', 'Beethoven', 'I am Batman', 'Goose', 'Chewbacca', 'Garfield', 'Sherlock', 'Peanut', 'Mittens', 'Icarus', 'Loki'] #lista random imena
 print("This is ",pokemon,"! He is your new pet! Name your ",pokemon,"! if you want to use random names write 'Random'")
-name=input()
+name=input() #upisivanje ne-random imena
 
 if name=="Random":
-    randomn()
+    randomn()#učitavanje funkcije
 else:
     print("Great! Let's start the game!")
 
@@ -221,45 +227,45 @@ left  =pygame.image.load("left.png").convert_alpha()
 right =pygame.image.load("right.png").convert_alpha()
 
 p=1
-prostorije=[bedroom, kitchen, living]
+prostorije=[bedroom, kitchen, living] #lista prostorija
 prostorija=prostorije[1]
 game_over=False
-upaljen=False
+upaljen=False #oznaka da button nije upaljen
 
-e=False
-etime=0
+e=False #oznaka da emocija nije upaljena
+etime=0 #vrijeme=0
 s=False
 stime=0
 h=False
 htime=0
 
-prostorija()
+prostorija() #učitava prostoriju po defaultu
 
 
 
 while not game_over:
 
-    if e==False and s==False and h==False:
-        if fxf==0 or fxe==0 or fxh==0:
-            noxon=angry
+    if e==False and s==False and h==False: #provjerava može li biti ljut(jer ne može biti ako ga hraniš, igraš se s njim ili spava)
+        if fxf==0 or fxe==0 or fxh==0: #ako je health 0 
+            noxon=angry #postane ljut
             screen.blit(noxon,(-100,100))
             pygame.display.update()
-            time.sleep(3)
-            pygame.display.quit()
-            print("He died")
-            print("You are terrible at this")
-            time.sleep(10)
-            sys.exit()
+            time.sleep(3) #ljuto te gleda 3 sekunde
+            pygame.display.quit() #umre
+            print("He died") #program te obavijesti da si ubio ljubimca
+            print("You are terrible at this") #i da nisi spreman na takvu obvezu
+            time.sleep(10) #program te ljuto gleda 10 sekundi
+            sys.exit() #prije nego umre
             
             
-        elif fxf<=100:
+        elif fxf<=100: #ako se hungry health smanji preko pola 
             noxon=hungry
-            screen.blit(hungry,(-100,100))
+            screen.blit(hungry,(-100,100)) #učitava emociju "gladan"
     else:
-        noxon=noxon2
-    if time.time()-1>begtime:
-        fxf=fxf-2
-        if fxf<0:
+        noxon=noxon2 #ako nije ljut da se vrati u normalu
+    if time.time()-1>begtime: #mjeri nakon koliko sekundi health opada 
+        fxf=fxf-2 #smanjuje duljinu
+        if fxf<0:#provjerava je li mu health pao na 0% 
             fxf=0
         fxe=fxe-2
         if fxe<0:
@@ -268,13 +274,13 @@ while not game_over:
         if fxh<0:
             fxh=0
         begtime=time.time()
-    food(fxf)
+    food(fxf)#poziva funkciju
     energy(fxe)
     happiness(fxh)
-    if e==True and time.time()-etime>3:
+    if e==True and time.time()-etime>3: #mjeri vrijeme prije nego li završi emociju i vrati ga u original
         screen.blit(noxon,(-100,100))
         e=False
-        etime=0
+        etime=0 #resitira vrijeme
     if s==True and time.time()-stime>3:
         screen.blit(noxon,(-100,100))
         s=False
@@ -286,16 +292,18 @@ while not game_over:
     
 
     for event in pygame.event.get():    
-        Engine.button(event, 140, 140, 20 , height/2-300, width, height, promjena_minus )#left
-        Engine.button(event, 140, 140, width-160 , height/2-300, width, height, promjena_plus) #right
-        preusmjeravanje ()
-        pygame.display.update()
-        if event.type==pygame.QUIT:
+        Engine.button(event, 140, 140, 20 , height/2-300, width, height, promjena_minus )#gumb lijevo koji usmjerava koju prostoriju treba pokrenuti
+        Engine.button(event, 140, 140, width-160 , height/2-300, width, height, promjena_plus) #gumb lijevo koji usmjerava koju prostoriju treba pokrenuti
+        preusmjeravanje () #pogodite
+        pygame.display.update() #ekran update
+        if event.type==pygame.QUIT: #program dies
             pygame.display.quit()
             sys.exit()
      
 
-
+#u kodu se dijelovi ponavljaju te nisam komentirala za svaki dio posebno nego samo jedan
+#credit Leonardo Šimunović za engine and for help
+#imam još mnogo ideja za update (i ljubimaca), ali nedovoljno vremena
 
 
 
